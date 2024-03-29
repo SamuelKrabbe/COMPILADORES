@@ -12,43 +12,28 @@ CFLAGS = -pedantic -Wall
 all: compile run clean help
 
 compile:
-	@echo ""
-	@echo "Compiling..."
-	@echo ""
+	@echo Compiling...
 	@g++ $(PROG) $(HEADERS) -o $(ORIGIN) $(CFLAGS)
 
 run: compile
-	@echo ""
-	@echo "Running..."
-	@echo ""
+	@echo Running...
 	@./$(ORIGIN) $(INPUT)
 
 clean:
-	@echo ""
-	@echo ""
-	@echo "Cleaning..."
-	@echo ""
+	@echo Cleaning...
 	@rm -f $(ORIGIN)
-	@echo "Origin file removed"
-	@echo ""
+	@echo Origin file removed
 
 help:
-	@echo ""
-	@echo "For more commands type: 'make commands'"
-	@echo ""
+	@echo For more commands type: 'make commands'
 
 commands:
-	@echo ""
-	@echo "type:"
-	@echo "    'make compile' to compile"
-	@echo ""
-	@echo "    'make run' to run the compiled file"
-	@echo ""
-	@echo "    'make clean' to remove the origin (.exe) file"
-	@echo ""
+	@echo type:
+	@echo     'make compile' to compile
+	@echo     'make run' to run the compiled file
+	@echo     'make clean' to remove the origin (.exe) file
 
 default:
-	@echo "----------------------------------------------"
-	@make compile
+	@echo ------------------------------------------------
 	@make run
 	@make help

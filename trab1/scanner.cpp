@@ -7,30 +7,30 @@ Scanner::Scanner(string input)
     /*this->input = input;
     cout << "Entrada: " << input << endl << "Tamanho: " 
          << input.length() << endl;*/
+
     pos = 0;
-    line = 1;
+    line = 0;
 
-    ifstream inputFile(input, ios::in);
-    string line;
-
-    if (inputFile.is_open())
-    {
-        while (getline(inputFile,line) )
-        {
-            this->input.append(line + '\n');
-        }
-        inputFile.close();
+    ifstream inputFile(input);
+    if (!inputFile.is_open()) {
+        cerr << "Unable to open file: " << input << endl;
+        return;
     }
-    else 
-        cout << "Unable to open file\n"; 
 
-    // cout << this->input << endl; 
+    // Read file line by line and process each line
+    string fileLine;
+    while (getline(inputFile, fileLine)) {
+        this->input.append(fileLine + '\n');
+    }
+
+    inputFile.close(); 
+    // cout << this->input << endl;
 }
 
 int
 Scanner::getLine()
 {
-    return line;
+    return line + 1;
 }
 
 //Método que retorna o próximo token da entrada
@@ -39,6 +39,7 @@ Scanner::nextToken()
 {
     Token* token;
     string lexeme = "";
+    line++;
 
     int state = 0;
 
@@ -190,27 +191,27 @@ Scanner::nextToken()
                 break;
 
             case 13: // AND
-                token = new Token(OP, AND);
+                token = new Token(AND, "&&");
                 return token;
 
             case 14: // LT
-                token = new Token(OP, LT);
+                token = new Token(LT, "<");
                 return token;
 
             case 15: // GT
-                token = new Token(OP, GT);
+                token = new Token(GT, ">");
                 return token;
 
             case 16: // PLUS
-                token = new Token(OP, PLUS);
+                token = new Token(PLUS, "+");
                 return token;
 
             case 17: // MINUS
-                token = new Token(OP, MINUS);
+                token = new Token(MINUS, "-");
                 return token;
 
             case 18: // MULT
-                token = new Token(OP, MULT);
+                token = new Token(MULT, "*");
                 return token;
 
             case 19:
@@ -229,7 +230,7 @@ Scanner::nextToken()
                 break; 
             
             case 20: // DIV
-                token = new Token(OP, DIV);
+                token = new Token(DIV, "/");
                 return token;
 
             case 21: // COMENTÁRIO EM LINHA
@@ -258,22 +259,26 @@ Scanner::nextToken()
                 break;
 
             case 24:
-                if (input[pos] != '=') {
+                if (input[pos] == '=') {
                     state = 25;
+                    lexeme += input[pos];
+                    pos++;
+                    break; 
+                }
+                else if (input[pos] != '=') {
+                    state = 26;
                     lexeme += input[pos];
                     break;
                 }
-                state = 26;
-                lexeme += input[pos];
-                pos++;
-                break; 
+                else
+                    lexicalError("Token mal formado\n");
 
             case 25: // EQ
-                token = new Token(OP, EQ);
+                token = new Token(EQ, "==");
                 return token;
 
             case 26: // ATROP
-                token = new Token(OP, ATROP);
+                token = new Token(ATROP, "=");
                 return token;
 
             case 27:
@@ -288,47 +293,47 @@ Scanner::nextToken()
                 break; 
 
             case 28: // DIFF
-                token = new Token(OP, DIFF);
+                token = new Token(DIFF, "!=");
                 return token;
 
             case 29: // NOT
-                token = new Token(OP, NOT);
+                token = new Token(NOT, "!");
                 return token;
 
             case 30: // LPAR
-                token = new Token(SEP, LPAR);
+                token = new Token(LPAR, "'('");
                 return token;
 
             case 31: // RPAR
-                token = new Token(SEP, RPAR);
+                token = new Token(RPAR, "')'");
                 return token;
 
             case 32: // LCOL
-                token = new Token(SEP, LCOL);
+                token = new Token(LCOL, "'['");
                 return token;
 
             case 33: // RCOL
-                token = new Token(SEP, RCOL);
+                token = new Token(RCOL, "']'");
                 return token;
 
             case 34: // LCHA
-                token = new Token(SEP, LCHAVE);
+                token = new Token(LCHAVE, "'{'");
                 return token;
 
             case 35: // RCHA
-                token = new Token(SEP, RCHAVE);
+                token = new Token(RCHAVE, "'}'");
                 return token;
 
             case 36: // PONTO_VIRGULA
-                token = new Token(SEP, PONTO_VIRGULA);
+                token = new Token(PONTO_VIRGULA, "';'");
                 return token;
 
             case 37: // PONTO
-                token = new Token(SEP, PONTO);
+                token = new Token(PONTO, "'.'");
                 return token;
 
             case 38: // VIRGULA
-                token = new Token(SEP, VIRGULA);
+                token = new Token(VIRGULA, "','");
                 return token;
 
             case 40: // TRATAMENTO PARA ESPAÇOS EM BRANCO
