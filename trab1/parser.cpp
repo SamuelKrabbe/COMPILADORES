@@ -40,7 +40,7 @@ Parser::prog()
 {
 	cout << "prog" << " ";
 	main();
-	if (lookahead->lexeme.compare("class") == 0)
+	while (lookahead->lexeme.compare("class") == 0)
 		classe();
 }
 
@@ -77,19 +77,19 @@ Parser::classe()
 	match(-1, "class");
 	match(ID);
 	if (lookahead->lexeme.compare("extends") == 0) {
+		match(-1, "extends");
 		match(ID);
 	}
 	match(LCHAVE);
 	if (lookahead->lexeme.compare("'}'") != 0) {
-		if (lookahead->lexeme.compare("int") == 0 || lookahead->lexeme.compare("boolean") == 0) {
+		while (lookahead->lexeme.compare("int") == 0 || lookahead->lexeme.compare("boolean") == 0 || lookahead->name == 1) {
             var();
         }
-		if (lookahead->lexeme.compare("public") == 0) {
+		while (lookahead->lexeme.compare("public") == 0) {
             metodo();
         }
 	}
 	match(RCHAVE);
-	
 }
 
 // VAR    -> TIPO id ;
@@ -113,25 +113,39 @@ Parser::metodo()
 	match(ID);
 	match(LPAR);
 	if (lookahead->lexeme.compare("')'") != 0) {
-		if (lookahead->lexeme.compare("int") == 0 || lookahead->lexeme.compare("boolean") == 0) {
+		if (lookahead->lexeme.compare("int") == 0 || lookahead->lexeme.compare("boolean") == 0 || lookahead->name == 1) {
         	params();
     	}
 	}
 	match(RPAR);
 	match(LCHAVE);
 	if (lookahead->lexeme.compare("'}'") != 0) {
-		if (lookahead->lexeme.compare("int") == 0 || lookahead->lexeme.compare("boolean") == 0) {
+		while (lookahead->lexeme.compare("int") == 0 || lookahead->lexeme.compare("boolean") == 0) {
             var();
         }
-		if (lookahead->lexeme.compare("'{'") == 0 || lookahead->lexeme.compare("if") == 0 || lookahead->lexeme.compare("while") == 0 || lookahead->lexeme.compare("System.out.println") == 0) {
+		while (lookahead->lexeme.compare("'{'") == 0 || lookahead->lexeme.compare("if") == 0 || lookahead->lexeme.compare("while") == 0 || lookahead->lexeme.compare("System.out.println") == 0) {
             cmd();
         }
+		while (lookahead->name == 1) {
+			id();
+		}
+		if (lookahead->lexeme.compare("return") == 0) {
+			match(-1, "return");
+			exp();
+			match(PONTO_VIRGULA);
+		}
 	}
-	match(-1, "return");
-	exp();
-	match(PONTO_VIRGULA);
 	match(RCHAVE);
-	
+}
+
+void 
+Parser::id()
+{
+	cout << "id" << " ";
+	tipo();
+	if (lookahead->lexeme.compare("=") == 0 || lookahead->lexeme.compare("'['") == 0) {
+		id_();
+	}
 }
 
 // PARAMS -> TIPO id {, TIPO id}
@@ -141,7 +155,7 @@ Parser::params()
 	cout << "params" << " ";
 	tipo();
 	match(ID);
-	if (lookahead->lexeme.compare("','") == 0) {
+	while (lookahead->lexeme.compare("','") == 0) {
 		match(VIRGULA);
 		tipo();
 		match(ID);
@@ -158,26 +172,16 @@ Parser::tipo()
 	cout << "tipo" << " ";
 	if (lookahead->lexeme.compare("int") == 0) {
 		match(-1, "int");
-		int_();
+		if (lookahead->lexeme.compare("'['") == 0) {
+			match(-1, "'['");
+			match(RCOL);
+		}
 	}
 	else if (lookahead->lexeme.compare("boolean") == 0) {
 		match(-1, "boolean");
 	}
 	else
 		match(ID);
-	
-}
-
-// INT_   -> '[' ']'
-//         | epsilon
-void 
-Parser::int_()
-{
-	cout << "int_" << " ";
-	if (lookahead->lexeme.compare("'['") == 0) {
-		match(-1, "'['");
-		match(RCOL);
-	}
 	
 }
 
@@ -251,7 +255,6 @@ Parser::id_()
 	match(ATROP);
 	exp();
 	match(PONTO_VIRGULA);
-	
 }
 
 // EXP    -> REXP EXP_
@@ -372,8 +375,8 @@ Parser::mexp_()
 //         | - SEXP
 //         | true
 //         | false
-//         | num (INTEGER_LITERAL || FLOAT_LITERAL)
-//         | new SEXP_NEW
+//         | INTEGER_LITERAL
+//		   | PEXP SEXP_
 void 
 Parser::sexp()
 {
@@ -392,32 +395,10 @@ Parser::sexp()
 	else if (isNumber(lookahead->lexeme) == 0) {
         match(INTEGER_LITERAL);
     }
-	else if (isNumber(lookahead->lexeme) == 1) {
-        match(FLOAT_LITERAL);
-    }
-    else {
-        match(-1, "new");
-        sexp_aux();
-    }
-}
-
-// SEXP_NEW-> int '[' EXP ']'
-//         | PEXP SEXP_
-void 
-Parser::sexp_aux()
-{
-	cout << "sexp_aux" << " ";
-	if (lookahead->lexeme.compare("int") == 0) {
-        match(-1, "int");
-        match(LCOL);
-        exp();
-        match(RCOL);
-    }
-    else {
+    else if (lookahead->lexeme.compare("new") == 0) {
         pexp();
         sexp_();
     }
-	
 }
 
 // SEXP_   -> . length
@@ -441,7 +422,7 @@ Parser::sexp_()
 
 // PEXP   -> id PEXP_
 //         | this PEXP_
-//         | new id '(' ')' PEXP_
+//         | new NEW_
 //         | '(' EXP ')' PEXP_
 void 
 Parser::pexp()
@@ -453,10 +434,7 @@ Parser::pexp()
     }
     else if (lookahead->lexeme.compare("new") == 0) {
         match(-1, "new");
-        match(ID);
-        match(LPAR);
-        match(RPAR);
-		pexp_();
+        new_();
     }
     else if (lookahead->lexeme.compare("'('") == 0) {
         match(LPAR);
@@ -468,6 +446,27 @@ Parser::pexp()
         match(ID);
 		pexp_();
     }
+	
+}
+
+//NEW_ -> id '(' ')'
+//     | int '[' EXP ']'
+void 
+Parser::new_()
+{
+	cout << "new_" << " ";
+	if (lookahead->name == 1) {
+		match(ID);
+        match(LPAR);
+        match(RPAR);
+	} else if (lookahead->lexeme.compare("int") == 0) {
+		match(-1, "int");
+        match(LCOL);
+        exp();
+        match(RCOL);
+	} else {
+		error("Erro inesperado");
+	}
 	
 }
 
@@ -485,8 +484,8 @@ Parser::pexp_()
 	
 }
 
-// PEXP_PID-> PEXP_
-//         | '(' [EXPS] ')' PEXP_
+// PEXP_PID-> '(' [EXPS] ')'
+//         | epsilon
 void 
 Parser::pexp_pid()
 {
@@ -498,8 +497,6 @@ Parser::pexp_pid()
         }
         match(RPAR);
     }
-	pexp_();
-	
 }
 
 // EXPS   -> EXP {, EXP}
@@ -508,7 +505,7 @@ Parser::exps()
 {
 	cout << "exps" << " ";
 	exp();
-	if (lookahead->lexeme.compare("','") == 0) {
+	while (lookahead->lexeme.compare("','") == 0) {
 		match(VIRGULA);
 		exp();
 	}
@@ -547,8 +544,7 @@ Parser::allocVetor()
     vet[24] = "VIRGULA";//24
     vet[25] = "PALAVRA_RESERVADA";//25
     vet[26] = "STR";//26
-    vet[27] = "FLOAT_LITERAL", //27
-    vet[28] = "END_OF_FILE";//28
+    vet[27] = "END_OF_FILE";//27
 }
 
 void

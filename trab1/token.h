@@ -33,7 +33,6 @@ enum Names
     VIRGULA, // ,
     PALAVRA_RESERVADA,
     STR,
-    FLOAT_LITERAL,
     END_OF_FILE
 };
 

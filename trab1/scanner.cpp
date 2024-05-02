@@ -112,15 +112,6 @@ Scanner::nextToken()
                 pos++;
                 break;  
 
-            case 2: 
-                if (!isdigit(input[pos])) {
-                    state = 43;
-                    break;
-                }
-                lexeme += input[pos];
-                pos++;
-                break;
-
             case 3:
                 if (isdigit(input[pos]) || input[pos] == '_') {
                     state = 5;
@@ -156,10 +147,7 @@ Scanner::nextToken()
                 break;
 
             case 9:
-                if (input[pos] == '.') {
-                    state = 11;
-                }
-                else if (!isdigit(input[pos])) {
+                if (!isdigit(input[pos])) {
                     state = 10;
                     break;
                 }
@@ -168,18 +156,11 @@ Scanner::nextToken()
                 break; 
 
             case 10: // INTEGER_LITERAL
+                if(input[pos] == '.') {
+                    lexicalError("Token mal formado\n");
+                }
                 token = new Token(INTEGER_LITERAL, lexeme);
                 return token;
-
-            case 11:
-                if (isdigit(input[pos])) {
-                    state = 2;
-                }
-                else
-                    lexicalError("Token mal formado\n");
-                lexeme += input[pos];
-                pos++;
-                break;
 
             case 12:
                 if (input[pos] == '&')
@@ -355,10 +336,6 @@ Scanner::nextToken()
 
             case 42: // STR
                 token = new Token(STR, lexeme);
-                return token;
-
-            case 43: // FLOAT_LITERAL
-                token = new Token(FLOAT_LITERAL, lexeme);
                 return token;
 
             default:

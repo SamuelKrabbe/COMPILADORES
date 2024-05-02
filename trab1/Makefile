@@ -4,7 +4,7 @@
 
 PROG = principal.cpp scanner.cpp parser.cpp
 HEADERS = scanner.h token.h parser.h
-ORIGIN = analisadorLexico.exe
+ORIGIN = ./mj_compiler.exe
 INPUT = input.mj
 
 CFLAGS = -pedantic -Wall
