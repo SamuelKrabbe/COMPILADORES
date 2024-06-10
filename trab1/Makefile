@@ -2,27 +2,26 @@
 # To use type 'make' to use the default function
 # or 'make <function>' to use a specific function
 
-PROG = principal.cpp scanner.cpp parser.cpp
+PROG = *.cpp
 HEADERS = scanner.h token.h parser.h
-ORIGIN = ./mj_compiler.exe
+ORIGIN = mj_compiler
 INPUT = input.mj
 
 CFLAGS = -pedantic -Wall
 
-all: compile run clean help
+all: compile run help
 
 compile:
-	@echo Compiling...
-	@g++ $(PROG) $(HEADERS) -o $(ORIGIN) $(CFLAGS)
+	@echo Compilando...
+	@g++ $(PROG) -o $(ORIGIN)
 
 run: compile
-	@echo Running...
 	@./$(ORIGIN) $(INPUT)
 
 clean:
-	@echo Cleaning...
+	@echo Limpando...
 	@rm -f $(ORIGIN)
-	@echo Origin file removed
+	@echo Arquivo origem removido
 
 help:
 	@echo For more commands type: 'make commands'

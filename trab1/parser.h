@@ -6,9 +6,19 @@ class Parser
         Scanner* scanner;
         Token* lookahead;
         string* vet;
+        SymbolTable* globalST;
+    	SymbolTable* currentST;
 
         void advance();
         void match(int, string);
+        void initSimbolTable();
+        void printToken(Token*);
+        void allocVetor();
+        void freeVetor();
+        int isNumber(string);
+        void error(string, int);
+        void newScope();
+        void clearScope();
 
         void prog();
         void main();
@@ -23,25 +33,19 @@ class Parser
         void id_();
         void exp();
         void exp_();
-        void rexp();
-        void rexp_();
-        void aexp();
-        void aexp_();
-        void mexp();
-        void mexp_();
-        void sexp();
-        void sexp_();
-        void pexp();
+        void relexp();
+        void relexp_();
+        void addexp();
+        void addexp_();
+        void multexp();
+        void multexp_();
+        void unexp();
+        void unexp_();
+        void primexp();
         void new_();
-        void pexp_();
-        void pexp_pid();
-        void exps();
-
-        void printToken(Token*);
-        void allocVetor();
-        void freeVetor();
-        int isNumber(string);
-        void error(string);
+        void primexp_();
+        void primexp_pid();
+        void expsList();
         
     public:
         Parser(string);

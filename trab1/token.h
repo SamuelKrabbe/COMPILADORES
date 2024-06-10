@@ -8,7 +8,6 @@ enum Names
 {
     UNDEF,
     ID,
-    INTEGER_LITERAL,
     OP,
     AND, // &&
     LT, // <
@@ -32,8 +31,28 @@ enum Names
     PONTO, // .
     VIRGULA, // ,
     PALAVRA_RESERVADA,
-    STR,
-    END_OF_FILE
+    END_OF_FILE,
+
+    // Palavras Reservadas em MiniJava modificada
+    BOOLEAN,
+    CLASS,
+    EXTENDS,
+    PUBLIC,
+    STATIC,
+    VOID,
+    MAIN,
+    STRING,
+    RETURN,
+    INT,
+    IF,
+    ELSE,
+    WHILE,
+    SYSTEM_OUT_PRINTLN,
+    LENGTH,
+    TRUE,
+    FALSE,
+    THIS,
+    NEW
 };
 
 class Token 

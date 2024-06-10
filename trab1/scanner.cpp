@@ -9,7 +9,7 @@ Scanner::Scanner(string input)
          << input.length() << endl;*/
 
     pos = 0;
-    line = 0;
+    line = 1;
 
     ifstream inputFile(input);
     if (!inputFile.is_open()) {
@@ -39,7 +39,6 @@ Scanner::nextToken()
 {
     Token* token;
     string lexeme = "";
-    line++;
 
     int state = 0;
 
@@ -159,7 +158,7 @@ Scanner::nextToken()
                 if(input[pos] == '.') {
                     lexicalError("Token mal formado\n");
                 }
-                token = new Token(INTEGER_LITERAL, lexeme);
+                token = new Token(INT, lexeme);
                 return token;
 
             case 12:
@@ -323,6 +322,9 @@ Scanner::nextToken()
                     lexeme = "";
                     break;
                 }
+                if (input[pos] == '\n') {
+                    line++;
+                }
                 pos++;
                 break;
 
@@ -335,7 +337,7 @@ Scanner::nextToken()
                 break;
 
             case 42: // STR
-                token = new Token(STR, lexeme);
+                token = new Token(STRING, lexeme);
                 return token;
 
             default:
