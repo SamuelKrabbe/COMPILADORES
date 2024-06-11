@@ -70,6 +70,16 @@ SymbolTable::get(string name)
     return s->second;
 }
 
+STEntry* 
+SymbolTable::getLastEntry()
+{
+    SymbolTable* table = this;
+
+    auto s = table->symbols.end();
+    
+    return s->second;
+}
+
 SymbolTable*
 SymbolTable::getParent()
 {

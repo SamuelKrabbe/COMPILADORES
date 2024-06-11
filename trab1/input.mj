@@ -5,19 +5,9 @@ class Principal{
 }
 
 class Secundaria extends Principal{
-  int seila;
     public int ComputeFac(int num){
-		  int num_aux;
-      seila = 2;
-	    num_aux = 1;
-		  return 2;
-    }
-}
-
-class terceira{
-    public int ComputeFac(int num){
-      int seila;
-      seila = 2;
+		  //int num_aux;
+	    //num_aux = 1;
 		  return 2;
     }
 }

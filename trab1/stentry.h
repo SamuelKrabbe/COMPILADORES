@@ -4,11 +4,11 @@ class STEntry
 {
     public:
         Token* token;
-        int lvalue;
+        // string type;
         bool reserved;
     
         STEntry();
         STEntry(Token*);   
-        STEntry(Token*, int);
+        // STEntry(Token*, string);
         STEntry(Token*, bool);
 };

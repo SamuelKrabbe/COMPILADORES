@@ -20,5 +20,6 @@ class SymbolTable
         void clear();
         bool isEmpty();
         STEntry* get(string);
+        STEntry* getLastEntry();
         SymbolTable* getParent();
 };

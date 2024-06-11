@@ -200,7 +200,7 @@ Parser::params()
 	
 }
 
-// TIPO   -> int INT_
+// TIPO   -> int ([])?
 //         | boolean
 //         | id
 void 
@@ -452,6 +452,9 @@ Parser::unexp()
         primexp();
         unexp_();
     }
+	else {
+		error("Invalid expression", scanner->getLine());
+	}
 }
 
 // unexp_   -> . length
@@ -495,10 +498,13 @@ Parser::primexp()
         match(RPAR);
 		primexp_();
     }
-	else {
+	else if (lookahead->name == ID) {
         match(ID);
 		primexp_();
     }
+	else {
+		error("Invalid expression", scanner->getLine());
+	}
 	
 }
 
