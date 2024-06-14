@@ -710,8 +710,7 @@ Parser::error(string str, int lineNumber = -1)
         cout << "Linha:" << lineNumber << ": ";
     }
 	cout << str << endl;
-
-	exit(EXIT_FAILURE);
+	advance();
 }
 
 void
