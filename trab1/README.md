@@ -1,4 +1,4 @@
-Instruções de Uso para Makefiles
+Instruções de Uso para o Makefile
 ----------------------------------------------------------------
 
 Pré-requisitos
@@ -17,7 +17,7 @@ Uso
     Ou use o seguinte comando para usar uma alvo específica:
         make <nome_do_alvo>
 
-Descrições dos Alvos
+Descrições dos Alvos do Makefile
 
     make compile: Compila os arquivos fonte C++ em um executável.
     make run: Executa o executável.
