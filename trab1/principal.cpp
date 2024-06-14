@@ -1,4 +1,4 @@
-/* Author(s): Samuel de Oliveira Krabbe, Yan Marcos, Lucas Arruda
+/* Author(s): Samuel de Oliveira Krabbe, Yan Marcos Teixeira da Costa, Lucas Lacerda Arruda
  * Compilador de MiniJava
 */
 
