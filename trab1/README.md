@@ -1,3 +1,7 @@
+Author(s): Samuel de Oliveira Krabbe, Yan Marcos Teixeira da Costa, Lucas Lacerda Arruda
+Compilador de MiniJava
+
+----------------------------------------------------------------
 Instruções de Uso para o Makefile
 ----------------------------------------------------------------
 
